@@ -3,10 +3,10 @@ const bodyParser = require("body-parser");
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  user: "",
+  user: "postgres",
   host: "localhost",
   database: "migracode",
-  password: "",
+  password: "umerAshraf",
   port: 5432,
 });
 
@@ -14,6 +14,21 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post("/students", function (req, res) {
+  const name = req.body.name;
+  const email = req.body.email;
+  const address = req.body.address
+  const phone_number = req.body.phone_number
+  const batch = req.body.batch
+  const status = req.body.status
+
+  pool
+    .query('INSERT INTO students (name, email, address, phone_number, batch, status) VALUES ($1, $2, $3, $4, $5, $6);', [name, email, address, phone_number, batch, status])
+    .then(() => res.send("all good"))
+    .catch((err) => {
+      console.error(err.message);
+      res.status(500).send("Internal Server Error");
+    });
+
   // ... insert a student into the students table
 });
 
@@ -27,12 +42,39 @@ app.get("/students", function (req, res) {
     });
 });
 
+
 app.put("/students/:studentId", function (req, res) {
   // ... update a student in the students table
+  const studentsId = req.params.studentsId;
+  const name = req.body.name;
+  const email = req.body.email;
+  const address = req.body.address
+  const phone_number = req.body.phone_number
+  const batch = req.body.batch
+  const status = req.body.status
+
+  pool
+    .query('UPDATE students WHERE (name, email, address, phone_number, batch, status) VALUES ($1, $2, $3, $4, $5, $6);', [name, email, address, phone_number, batch, status])
+    .then(() => res.send(`Student ${studentsId} updated!`))
+    .catch((err) => {
+      console.error(err.message);
+      res.status(500).send("Internal Server Error");
+    });
 });
+
 
 app.delete("/students/:studentId", function (req, res) {
   // ... delete a student from the students table
+    const studentId = req.params.studentId;
+  
+    
+        pool
+          .query("DELETE FROM students WHERE id=$1", [studentId])
+          .then(() => res.send(`students ${studentId} deleted!`))
+          .catch((err) => {
+            console.error(err.message);
+            res.status(500).send("Internal Server Error");
+          });
 });
 
 app.post("/languages", function (req, res) {

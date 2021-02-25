@@ -1,10 +1,10 @@
-drop table if exists staff cascade;
-drop table if exists languages cascade;
-drop table if exists attendances cascade;
-drop table if exists classes cascade;
-drop table if exists modules cascade;
-drop table if exists teachers cascade;
-drop table if exists students cascade;
+drop table if exists staff;
+drop table if exists languages;
+drop table if exists attendances;
+drop table if exists classes;
+drop table if exists modules;
+drop table if exists teachers;
+drop table if exists students;
 
 CREATE TABLE languages (
     id      SERIAL PRIMARY KEY,
