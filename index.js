@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
+const { query } = require("express");
 
 const pool = new Pool({
   user: "postgres",
@@ -54,7 +55,7 @@ app.put("/students/:studentId", function (req, res) {
   const status = req.body.status
 
   pool
-    .query('UPDATE students WHERE (name, email, address, phone_number, batch, status) VALUES ($1, $2, $3, $4, $5, $6);', [name, email, address, phone_number, batch, status])
+    .query('UPDATE students (name, email, address, phone_number, batch, status) VALUES ($1, $2, $3, $4, $5, $6);', [name, email, address, phone_number, batch, status])
     .then(() => res.send(`Student ${studentsId} updated!`))
     .catch((err) => {
       console.error(err.message);
@@ -79,10 +80,27 @@ app.delete("/students/:studentId", function (req, res) {
 
 app.post("/languages", function (req, res) {
   // ... insert a language into the languages table
+  const name = req.body.name;
+  pool
+  query('INSERT INTO languages (name) VALUE (name=$1)', [name])
+  .then(() => res.send("Language is inserted"))
+    .catch((err) => {
+      console.error(err.message);
+      res.status(500).send("Internal Server Error");
+    });
+
+
 });
 
 app.get("/languages", function (req, res) {
   // ... select all languages from the languages table
+    pool
+      .query("SELECT * FROM languages;")
+      .then((result) => res.json(result.rows))
+      .catch((err) => {
+        console.error(err.message);
+        res.status(500).send("Internal Server Error");
+      });
 });
 
 app.delete("/languages/:languageId", function (req, res) {
@@ -95,6 +113,14 @@ app.post("/teachers", function (req, res) {
 
 app.get("/teachers", function (req, res) {
   // ... select all teachers from the teachers table
+  pool
+  .query("SELECT * FROM teachers;")
+  .then((result) => res.json(result.rows))
+  .catch((err) => {
+    console.error(err.message);
+  res.status(500).send("Internal Server Error");
+});
+
 });
 
 app.put("/teachers/:teacherId", function (req, res) {
@@ -111,6 +137,13 @@ app.post("/staff", function (req, res) {
 
 app.get("/staff", function (req, res) {
   // ... select all staff members from the staff table
+  pool
+  .query("SELECT * FROM staff;")
+  .then((result) => res.json(result.rows))
+  .catch((err) => {
+    console.error(err.message);
+  res.status(500).send("Internal Server Error");
+});
 });
 
 app.put("/staffs/:staffId", function (req, res) {
@@ -127,6 +160,14 @@ app.post("/modules", function (req, res) {
 
 app.get("/modules", function (req, res) {
   // ... select all modules from the modules table
+  pool
+  .query("SELECT * FROM modules;")
+  .then((result) => res.json(result.rows))
+  .catch((err) => {
+    console.error(err.message);
+  res.status(500).send("Internal Server Error");
+});
+  
 });
 
 app.put("/modules/:moduleId", function (req, res) {
@@ -143,6 +184,13 @@ app.post("/classes", function (req, res) {
 
 app.get("/classes", function (req, res) {
   // ... select all classes from the classes table
+  pool
+  .query("SELECT * FROM classes;")
+  .then((result) => res.json(result.rows))
+  .catch((err) => {
+    console.error(err.message);
+  res.status(500).send("Internal Server Error");
+});
 });
 
 app.post("/attendances", function (req, res) {
@@ -151,6 +199,13 @@ app.post("/attendances", function (req, res) {
 
 app.get("/attendances", function (req, res) {
   // ... select all attendances from the attendances table
+  pool
+  .query("SELECT * FROM attendances;")
+  .then((result) => res.json(result.rows))
+  .catch((err) => {
+    console.error(err.message);
+  res.status(500).send("Internal Server Error");
+});
 });
 
 // Trickier:
